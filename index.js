@@ -1,75 +1,85 @@
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Header = ({name}) => <h2>{name}</h2>
 
-const Anecdote = ({text, votesCount}) =>
-  <div>
-    <p>{text}</p>
-    <p>has {votesCount} votes</p>
-  </div>
+const Header = props => <h1>{props.name}</h1>
 
-const Winner = ({anecdotes, allVotes}) => {
-  const highestVoteCount = Math.max(...allVotes)
-  const winnerIndex = allVotes.indexOf(highestVoteCount)
-  const winner = anecdotes[winnerIndex]
-  if (highestVoteCount === 0) {
+const Statistic = ({text, value}) => {
+  if (text === "positive") {
     return (
-      <p>No votes yet</p>
+      <tr><td>{text} {value} %</td></tr>
     )
   }
 
   return (
-    <div>
-      <p>{winner}</p>
-      <p>has {highestVoteCount} votes</p>
-    </div>
+    <tr><td>{text} {value}</td></tr>
   )
 }
 
-const Button = ({ onClick, text }) =>
+const Statistics = ({clicks}) => {
+    const total = clicks.good + clicks.neutral + clicks.bad
+    const average = (clicks.good * 1 + clicks.bad * -1) / total
+    const positive = clicks.good * (100/total)
+
+    if (total === 0) {
+      return (
+        <div>
+          No feedback given
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        <table>
+          <tbody>
+            <Statistic text="good" value={clicks.good} />
+            <Statistic text="neutral" value={clicks.neutral} />
+            <Statistic text="bad" value={clicks.bad} />
+            <Statistic text="all" value={total} />
+            <Statistic text="average" value={average} />
+            <Statistic text="positive" value={positive} />
+          </tbody>
+        </table>
+      </div>
+    )
+}
+
+
+const Button = ({ onClick, text }) => (
   <button onClick={onClick}>
     {text}
   </button>
+)
 
-const App = ({anecdotes}) => {
-  const [selected, setSelected] = useState(0)
-  const [allVotes, setAllVotes] = useState(Array(6).fill(0))
+const App = () => {
+  // save clicks of each button to own state
+  const [clicks, setClicks] = useState({
+    good: 0, neutral: 0, bad: 0
+  })
 
-  const handleVoteClick = () => {
-    const newAllVotes = [...allVotes]
-    newAllVotes[selected] += 1
-    setAllVotes(newAllVotes)
-  }
+  const handleGoodClick = () =>
+    setClicks({...clicks, good: clicks.good + 1})
 
-  const handleAnecdoteClick = () => {
-    const arrayIndex = Math.floor(Math.random() * anecdotes.length)
-    setSelected(arrayIndex)
-  }
+  const handleNeutralClick = () =>
+    setClicks({...clicks, neutral: clicks.neutral + 1})
+
+  const handleBadClick = () =>
+    setClicks({...clicks, bad: clicks.bad + 1})
+
 
   return (
     <div>
-      <Header name="Anecdote of the day" />
-      <Anecdote text={anecdotes[selected]} votesCount={allVotes[selected]} />
-      <Button onClick={handleVoteClick} text="vote"/>
-      <Button onClick={handleAnecdoteClick} text="Next anecdote"/>
-
-      <Header name="Anecdote with most votes" />
-      <Winner anecdotes={anecdotes} allVotes={allVotes} />
+      <Header name="Customer feedback" />
+      <Button onClick={handleGoodClick} text='good' />
+      <Button onClick={handleNeutralClick} text='neutral' />
+      <Button onClick={handleBadClick} text='bad' />
+      <Header name="Statistics" />
+      <Statistics clicks={clicks} />
     </div>
   )
 }
 
-const anecdotes = [
-  'If it hurts, do it more often',
-  'Adding manpower to a late software project makes it later!',
-  'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
-  'Any fool can write code that a computer can understand. Good programmers write code that humans can understand.',
-  'Premature optimization is the root of all evil.',
-  'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
-]
-
-ReactDOM.render(
-  <App anecdotes={anecdotes} />,
+ReactDOM.render(<App />,
   document.getElementById('root')
 )

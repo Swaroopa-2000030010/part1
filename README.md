@@ -1,18 +1,21 @@
-# Anecdotes
+# Solutions of part 1 exercises
 
-The world of software engineering is filled with anecdotes that distill timeless truths from our field into short one-liners.
+In this part, we will familiarize ourselves with the React-library, which we will be using to write the code that runs in the browser. We will also look at some features of Javascript that are important for understanding React.
 
-This application allows the user to vote between multiple anecdotes and then displays the most popular one.
+## Requirements
+* [node](https://nodejs.org/en/download/)
+* [yarn](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
+
 
 ## Start the application
 
-To start an application, do the following :
+There is one application by folder, to start an application :
 
 ```bash
-# Install dependancies
-$ yarn install
+# Head to the desired exercise (courseinfo, unicafe or anecdotes)
+$ cd courseinfo
 # Start the application
 $ yarn start
 ```
 
-You can then access the app on : [http://localhost:3000/](http://localhost:3000/)
+You can then access the frontend on : [http://localhost:3000/](http://localhost:3000/)
